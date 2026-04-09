@@ -1,10 +1,7 @@
 <Window x:Class="CS2AdminTool.MainWindow"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        mc:Ignorable="d"
-        Title="CS2 Admin Tool" Height="900" Width="1400" MinHeight="760" MinWidth="1200">
+                Title="CS2 Admin Tool" Height="900" Width="1400" MinHeight="760" MinWidth="1200">
     <Grid Margin="12">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -29,9 +26,9 @@
                 <TextBlock Grid.Row="0" Grid.Column="1" Margin="8,0,0,0" Text="Port"/>
                 <TextBlock Grid.Row="0" Grid.Column="2" Margin="8,0,0,0" Text="Password"/>
 
-                <TextBox Grid.Row="1" Grid.Column="0" Margin="0,4,8,0" Text="{Binding Host, UpdateSourceTrigger=PropertyChanged}"/>
-                <TextBox Grid.Row="1" Grid.Column="1" Margin="0,4,8,0" Text="{Binding Port, UpdateSourceTrigger=PropertyChanged}"/>
-                <TextBox Grid.Row="1" Grid.Column="2" Margin="0,4,8,0" Text="{Binding Password, UpdateSourceTrigger=PropertyChanged}"/>
+                <TextBox Grid.Row="1" Grid.Column="0" Margin="0,4,8,0" Text="{Binding Host}"/>
+                <TextBox Grid.Row="1" Grid.Column="1" Margin="0,4,8,0" Text="{Binding Port}"/>
+                <TextBox Grid.Row="1" Grid.Column="2" Margin="0,4,8,0" Text="{Binding Password}"/>
 
                 <Button Grid.Row="1" Grid.Column="3" Width="130" Content="{Binding ConnectionButtonText}" Command="{Binding ToggleConnectionCommand}" Margin="0,4,8,0"/>
                 <Button Grid.Row="1" Grid.Column="4" Width="160" Content="Run Selected Config" Command="{Binding RunSelectedConfigCommand}" Margin="0,4,0,0"/>
@@ -51,13 +48,13 @@
                         <DockPanel>
                             <StackPanel DockPanel.Dock="Top">
                                 <TextBlock FontWeight="Bold" Text="Categories"/>
-                                <TextBox Margin="0,6,0,0" Text="{Binding NewCategoryName, UpdateSourceTrigger=PropertyChanged}"/>
+                                <TextBox Margin="0,6,0,0" Text="{Binding NewCategoryName}"/>
                                 <StackPanel Orientation="Horizontal" Margin="0,6,0,8">
                                     <Button Width="90" Content="Add" Command="{Binding CreateCategoryCommand}"/>
                                     <Button Width="90" Content="Delete" Command="{Binding DeleteCategoryCommand}" Margin="6,0,0,0"/>
                                 </StackPanel>
                             </StackPanel>
-                            <ListBox ItemsSource="{Binding Categories}" SelectedItem="{Binding SelectedCategory}" DisplayMemberPath="Name"/>
+                            <ListBox ItemsSource="{Binding Categories}" SelectedItem="{Binding SelectedCategory}" />
                         </DockPanel>
                     </Border>
 
@@ -65,7 +62,7 @@
                         <DockPanel>
                             <StackPanel DockPanel.Dock="Top">
                                 <TextBlock FontWeight="Bold" Text="Saved Configs"/>
-                                <TextBox Margin="0,6,0,6" Text="{Binding ConfigSearchText, UpdateSourceTrigger=PropertyChanged}"/>
+                                <TextBox Margin="0,6,0,6" Text="{Binding ConfigSearchText}"/>
                                 <WrapPanel Margin="0,0,0,8">
                                     <Button Width="85" Content="New" Command="{Binding CreateConfigCommand}"/>
                                     <Button Width="85" Content="Save" Command="{Binding SaveConfigCommand}" Margin="6,0,0,0"/>
@@ -87,22 +84,22 @@
                     </Border>
 
                     <Border Grid.Column="2" BorderBrush="#DDD" BorderThickness="1" Padding="10" CornerRadius="4">
-                        <ScrollViewer VerticalScrollBarVisibility="Auto">
+                        <ScrollViewer ScrollViewer.VerticalScrollBarVisibility="Auto">
                             <StackPanel>
                                 <TextBlock FontWeight="Bold" Text="Config Editor"/>
                                 <TextBlock Margin="0,8,0,0" Text="Name"/>
-                                <TextBox Text="{Binding SelectedConfig.Name, UpdateSourceTrigger=PropertyChanged}"/>
+                                <TextBox Text="{Binding SelectedConfig.Name}"/>
                                 <TextBlock Margin="0,8,0,0" Text="Description"/>
-                                <TextBox Text="{Binding SelectedConfig.Description, UpdateSourceTrigger=PropertyChanged}"/>
+                                <TextBox Text="{Binding SelectedConfig.Description}"/>
                                 <TextBlock Margin="0,8,0,0" Text="Category"/>
-                                <TextBox Text="{Binding SelectedConfig.Category, UpdateSourceTrigger=PropertyChanged}"/>
+                                <TextBox Text="{Binding SelectedConfig.Category}"/>
                                 <TextBlock Margin="0,8,0,0" Text="Tags (comma separated)"/>
-                                <TextBox Text="{Binding SelectedConfigTagsText, UpdateSourceTrigger=PropertyChanged}"/>
+                                <TextBox Text="{Binding SelectedConfigTagsText}"/>
                                 <TextBlock Margin="0,8,0,0" Text="Assigned Map"/>
-                                <ComboBox ItemsSource="{Binding MapOptions}" DisplayMemberPath="DisplayName" SelectedValuePath="Id" SelectedValue="{Binding SelectedConfig.MapProfileId, UpdateSourceTrigger=PropertyChanged}"/>
+                                <ComboBox ItemsSource="{Binding MapOptions}"  SelectedItem="{Binding SelectedConfigMap}"/>
 
                                 <TextBlock Margin="0,8,0,0" Text="Commands (one per line)"/>
-                                <TextBox Height="220" AcceptsReturn="True" VerticalScrollBarVisibility="Auto" Text="{Binding SelectedConfigCommandsText, UpdateSourceTrigger=PropertyChanged}"/>
+                                <TextBox Height="220" AcceptsReturn="True" ScrollViewer.VerticalScrollBarVisibility="Auto" Text="{Binding SelectedConfigCommandsText}"/>
 
                                 <WrapPanel Margin="0,8,0,0">
                                     <Button Width="120" Content="Move Last Up" Command="{Binding MoveCommandUpCommand}"/>
@@ -126,7 +123,7 @@
                         <DockPanel>
                             <StackPanel DockPanel.Dock="Top">
                                 <TextBlock FontWeight="Bold" Text="Maps"/>
-                                <TextBox Margin="0,6,0,6" Text="{Binding MapSearchText, UpdateSourceTrigger=PropertyChanged}"/>
+                                <TextBox Margin="0,6,0,6" Text="{Binding MapSearchText}"/>
                                 <WrapPanel Margin="0,0,0,8">
                                     <Button Width="85" Content="New" Command="{Binding CreateMapCommand}"/>
                                     <Button Width="85" Content="Save" Command="{Binding SaveMapCommand}" Margin="6,0,0,0"/>
@@ -148,22 +145,22 @@
                     </Border>
 
                     <Border Grid.Column="1" BorderBrush="#DDD" BorderThickness="1" Padding="10" CornerRadius="4">
-                        <ScrollViewer VerticalScrollBarVisibility="Auto">
+                        <ScrollViewer ScrollViewer.VerticalScrollBarVisibility="Auto">
                             <StackPanel>
                                 <TextBlock FontWeight="Bold" Text="Map Editor"/>
                                 <TextBlock Margin="0,8,0,0" Text="Display Name"/>
-                                <TextBox Text="{Binding SelectedMap.DisplayName, UpdateSourceTrigger=PropertyChanged}"/>
+                                <TextBox Text="{Binding SelectedMap.DisplayName}"/>
                                 <TextBlock Margin="0,8,0,0" Text="Category"/>
-                                <TextBox Text="{Binding SelectedMap.Category, UpdateSourceTrigger=PropertyChanged}"/>
+                                <TextBox Text="{Binding SelectedMap.Category}"/>
                                 <CheckBox Margin="0,8,0,0" IsChecked="{Binding SelectedMap.IsWorkshopMap}" Content="Workshop map"/>
                                 <TextBlock Margin="0,8,0,0" Text="Workshop Id"/>
-                                <TextBox Text="{Binding SelectedMap.WorkshopMapId, UpdateSourceTrigger=PropertyChanged}"/>
+                                <TextBox Text="{Binding SelectedMap.WorkshopMapId}"/>
                                 <TextBlock Margin="0,8,0,0" Text="Standard Map Name"/>
-                                <TextBox Text="{Binding SelectedMap.StandardMapName, UpdateSourceTrigger=PropertyChanged}"/>
+                                <TextBox Text="{Binding SelectedMap.StandardMapName}"/>
                                 <TextBlock Margin="0,8,0,0" Text="Notes"/>
-                                <TextBox Height="80" AcceptsReturn="True" Text="{Binding SelectedMap.Notes, UpdateSourceTrigger=PropertyChanged}"/>
+                                <TextBox Height="80" AcceptsReturn="True" Text="{Binding SelectedMap.Notes}"/>
                                 <TextBlock Margin="0,8,0,0" Text="Tags (comma separated)"/>
-                                <TextBox Text="{Binding SelectedMapTagsText, UpdateSourceTrigger=PropertyChanged}"/>
+                                <TextBox Text="{Binding SelectedMapTagsText}"/>
                             </StackPanel>
                         </ScrollViewer>
                     </Border>
@@ -183,7 +180,7 @@
                         <Button Content="Manual Refresh" Width="130" Command="{Binding RefreshTelemetryCommand}"/>
                         <Button Content="Start / Stop Auto" Width="140" Margin="6,0,0,0" Command="{Binding ToggleAutoRefreshCommand}"/>
                         <TextBlock VerticalAlignment="Center" Margin="10,0,0,0" Text="Interval (s):"/>
-                        <TextBox Width="70" Margin="6,0,0,0" Text="{Binding MonitorIntervalSeconds, UpdateSourceTrigger=PropertyChanged}"/>
+                        <TextBox Width="70" Margin="6,0,0,0" Text="{Binding MonitorIntervalSeconds}"/>
                     </WrapPanel>
 
                     <UniformGrid Grid.Row="1" Columns="2" Margin="0,10,0,0">
@@ -206,11 +203,11 @@
                         </Grid.ColumnDefinitions>
                         <StackPanel Grid.Column="0" Margin="0,0,6,0">
                             <TextBlock FontWeight="SemiBold" Text="Raw Status Output"/>
-                            <TextBox Height="130" AcceptsReturn="True" IsReadOnly="True" VerticalScrollBarVisibility="Auto" Text="{Binding RawStatusOutput, Mode=OneWay}"/>
+                            <TextBox Height="130" AcceptsReturn="True" IsReadOnly="True" ScrollViewer.VerticalScrollBarVisibility="Auto" Text="{Binding RawStatusOutput}"/>
                         </StackPanel>
                         <StackPanel Grid.Column="1" Margin="6,0,0,0">
                             <TextBlock FontWeight="SemiBold" Text="Raw Stats Output"/>
-                            <TextBox Height="130" AcceptsReturn="True" IsReadOnly="True" VerticalScrollBarVisibility="Auto" Text="{Binding RawStatsOutput, Mode=OneWay}"/>
+                            <TextBox Height="130" AcceptsReturn="True" IsReadOnly="True" ScrollViewer.VerticalScrollBarVisibility="Auto" Text="{Binding RawStatsOutput}"/>
                         </StackPanel>
                     </Grid>
 
@@ -224,9 +221,9 @@
                 <Grid Margin="10">
                     <StackPanel>
                         <TextBlock Text="Import Path"/>
-                        <TextBox Margin="0,4,0,10" Text="{Binding ImportPath, UpdateSourceTrigger=PropertyChanged}"/>
+                        <TextBox Margin="0,4,0,10" Text="{Binding ImportPath}"/>
                         <TextBlock Text="Export Path"/>
-                        <TextBox Margin="0,4,0,10" Text="{Binding ExportPath, UpdateSourceTrigger=PropertyChanged}"/>
+                        <TextBox Margin="0,4,0,10" Text="{Binding ExportPath}"/>
 
                         <WrapPanel>
                             <Button Width="100" Content="Import All" Command="{Binding ImportAllCommand}"/>
@@ -245,7 +242,7 @@
             </TabItem>
 
             <TabItem Header="RCON Ops+">
-                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                <ScrollViewer ScrollViewer.VerticalScrollBarVisibility="Auto">
                     <Grid Margin="10">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto"/>
@@ -258,7 +255,7 @@
 
                         <GroupBox Header="Preset Command Packs" Grid.Row="0" Margin="0,0,0,10">
                             <StackPanel Margin="8">
-                                <ComboBox ItemsSource="{Binding PresetPacks}" SelectedItem="{Binding SelectedPresetPack}" DisplayMemberPath="Name"/>
+                                <ComboBox ItemsSource="{Binding PresetPacks}" SelectedItem="{Binding SelectedPresetPack}" />
                                 <WrapPanel Margin="0,8,0,0">
                                     <Button Width="140" Content="Run Preset Pack" Command="{Binding RunPresetPackCommand}"/>
                                     <Button Width="140" Margin="6,0,0,0" Content="Rollback Last" Command="{Binding RollbackPresetPackCommand}"/>
@@ -274,7 +271,7 @@
                                     <Button Width="90" Margin="6,0,0,0" Content="Ready Check" Command="{Binding ReadyCheckCommand}"/>
                                 </WrapPanel>
                                 <TextBlock Margin="0,8,0,0" Text="Reason"/>
-                                <TextBox Text="{Binding PlayerActionReason, UpdateSourceTrigger=PropertyChanged}"/>
+                                <TextBox Text="{Binding PlayerActionReason}"/>
                                 <ListBox Margin="0,8,0,0" Height="120" ItemsSource="{Binding ParsedPlayers}" SelectedItem="{Binding SelectedPlayer}">
                                     <ListBox.ItemTemplate>
                                         <DataTemplate>
@@ -299,9 +296,9 @@
                             <StackPanel Margin="8">
                                 <WrapPanel>
                                     <TextBlock VerticalAlignment="Center" Text="Every (minutes):"/>
-                                    <TextBox Width="70" Margin="6,0,0,0" Text="{Binding ScheduleMinutes, UpdateSourceTrigger=PropertyChanged}"/>
+                                    <TextBox Width="70" Margin="6,0,0,0" Text="{Binding ScheduleMinutes}"/>
                                     <TextBlock VerticalAlignment="Center" Margin="12,0,0,0" Text="Action:"/>
-                                    <TextBox Width="180" Margin="6,0,0,0" Text="{Binding ScheduleAction, UpdateSourceTrigger=PropertyChanged}"/>
+                                    <TextBox Width="180" Margin="6,0,0,0" Text="{Binding ScheduleAction}"/>
                                     <Button Width="130" Margin="8,0,0,0" Content="Start / Stop" Command="{Binding ToggleAutomationCommand}"/>
                                 </WrapPanel>
                             </StackPanel>
@@ -312,9 +309,9 @@
                                 <CheckBox Content="Dry-run mode (no commands sent)" IsChecked="{Binding DryRunMode}"/>
                                 <CheckBox Margin="0,4,0,0" Content="Confirm destructive commands" IsChecked="{Binding RequireDestructiveConfirm}"/>
                                 <TextBlock Margin="0,8,0,0" Text="Denylist (comma separated)"/>
-                                <TextBox Text="{Binding CommandDenylist, UpdateSourceTrigger=PropertyChanged}"/>
+                                <TextBox Text="{Binding CommandDenylist}"/>
                                 <TextBlock Margin="0,8,0,0" Text="Allowlist (optional, comma separated)"/>
-                                <TextBox Text="{Binding CommandAllowlist, UpdateSourceTrigger=PropertyChanged}"/>
+                                <TextBox Text="{Binding CommandAllowlist}"/>
                             </StackPanel>
                         </GroupBox>
 
@@ -328,7 +325,7 @@
 
                         <GroupBox Header="Audit Log Export" Grid.Row="5">
                             <StackPanel Margin="8">
-                                <TextBox Text="{Binding AuditExportPath, UpdateSourceTrigger=PropertyChanged}"/>
+                                <TextBox Text="{Binding AuditExportPath}"/>
                                 <Button Width="150" Margin="0,8,0,0" Content="Export Audit Log" Command="{Binding ExportAuditLogCommand}"/>
                             </StackPanel>
                         </GroupBox>
@@ -337,7 +334,7 @@
             </TabItem>
 
             <TabItem Header="About / Info">
-                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                <ScrollViewer ScrollViewer.VerticalScrollBarVisibility="Auto">
                     <StackPanel Margin="12">
                         <GroupBox Header="Application Information" Margin="0,0,0,10">
                             <StackPanel Margin="8">
@@ -398,7 +395,7 @@
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
-                        <TextBox Grid.Column="0" Margin="0,0,8,0" Text="{Binding ManualCommand, UpdateSourceTrigger=PropertyChanged}"/>
+                        <TextBox Grid.Column="0" Margin="0,0,8,0" Text="{Binding ManualCommand}"/>
                         <Button Grid.Column="1" Width="95" Content="Execute" Command="{Binding ExecuteCommand}"/>
                     </Grid>
 

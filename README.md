@@ -1,6 +1,6 @@
 # CS2 Dedicated Server Admin Control Panel
 
-A Windows desktop control panel for managing Counter-Strike 2 dedicated servers over RCON.
+A cross-platform desktop control panel (Windows + Linux) for managing Counter-Strike 2 dedicated servers over RCON.
 
 CS2 Control Panel is designed for server owners, match admins, and community operators who want a structured workflow for running server configs, switching maps, monitoring server health, and performing common admin actions from a single UI.
 
@@ -53,21 +53,23 @@ CS2 Control Panel is designed for server owners, match admins, and community ope
 ## Tech Stack
 
 - **.NET 8**
-- **WPF (Windows desktop UI)**
+- **Avalonia UI (cross-platform desktop UI)**
 - **CoreRCON** for RCON communication
 
 ## Project Structure
 
-- `CS2AdminTool/` — Main WPF application
+- `CS2AdminTool/` — Main Avalonia application
 - `CS2AdminTool/Data/Seeds/` — Seed JSON files copied to app data on first run
-- `build.ps1` — Build and packaging script (publishes and zips output)
+- `build.ps1` — Windows build and packaging script
+- `build-release.sh` — Linux/macOS build and packaging script
+- `release-github.sh` — CLI helper to create a GitHub release with built artifacts
 - `dist/` — Generated build artifacts
 
 ## Getting Started
 
 ### Prerequisites
 
-- Windows 10/11
+- Windows or Linux (Ubuntu, Arch, etc.)
 - .NET SDK 8.0+
 - Access to a CS2 server with RCON enabled
 
@@ -80,22 +82,34 @@ dotnet build .\CS2AdminTool.sln
 dotnet run --project .\CS2AdminTool\CS2AdminTool.csproj
 ```
 
-### Build distributable package
+### Build distributable packages
+
+```bash
+# from repo root (Linux/macOS)
+./build-release.sh
+```
 
 ```powershell
-# from repo root
+# from repo root (Windows PowerShell)
 powershell -ExecutionPolicy Bypass -File .\build.ps1
 ```
 
-This produces a zip artifact at:
+This produces per-platform artifacts in `dist/` (linux-x64, linux-arm64, win-x64).
 
-- `dist/CS2AdminTool.zip`
+## GitHub Release Automation
+
+A release workflow is included at `.github/workflows/release.yml`.
+
+- Push a tag like `v1.1.0`.
+- GitHub Actions builds Linux/Windows self-contained binaries.
+- The workflow publishes a GitHub Release and uploads the generated artifacts automatically.
 
 ## Data Storage
 
 Application data is stored in the current user's local app data directory:
 
-- `%LOCALAPPDATA%\CS2AdminTool\Data`
+- Windows: `%LOCALAPPDATA%\CS2AdminTool\Data`
+- Linux: `$XDG_DATA_HOME/CS2AdminTool/Data` (or `~/.local/share/CS2AdminTool/Data` by default)
 
 On first run, seed data is copied from `CS2AdminTool/Data/Seeds` if missing.
 

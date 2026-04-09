@@ -102,10 +102,14 @@
                                 <TextBlock Margin="0,8,0,0" Text="Tags (comma separated)"/>
                                 <TextBox Text="{Binding SelectedConfigTagsText}"/>
                                 <TextBlock Margin="0,8,0,0" Text="Assigned Map"/>
-                                <ComboBox ItemsSource="{Binding MapOptions}"  SelectedItem="{Binding SelectedConfigMap}">
+                                <ComboBox ItemsSource="{Binding MapOptions}"
+                                          SelectedItem="{Binding SelectedConfigMap}"
+                                          MinWidth="320"
+                                          HorizontalAlignment="Stretch">
                                     <ComboBox.ItemTemplate>
                                         <DataTemplate>
-                                            <TextBlock Text="{Binding DisplayName}"/>
+                                            <TextBlock Text="{Binding DisplayName}"
+                                                       TextWrapping="Wrap"/>
                                         </DataTemplate>
                                     </ComboBox.ItemTemplate>
                                 </ComboBox>

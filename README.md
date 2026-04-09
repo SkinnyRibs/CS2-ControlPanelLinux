@@ -63,6 +63,7 @@ CS2 Control Panel is designed for server owners, match admins, and community ope
 - `build.ps1` — Windows build and packaging script
 - `build-release.sh` — Linux/macOS build and packaging script
 - `release-github.sh` — CLI helper to create a GitHub release with built artifacts
+- `launch-linux.sh` — Launch helper that runs a published Linux binary (or falls back to dotnet source run)
 - `dist/` — Generated build artifacts
 
 ## Getting Started
@@ -95,6 +96,31 @@ powershell -ExecutionPolicy Bypass -File .\build.ps1
 ```
 
 This produces per-platform artifacts in `dist/` (linux-x64, linux-arm64, win-x64).
+
+### Launch on Linux
+
+If you built from source:
+
+```bash
+./build-release.sh
+./launch-linux.sh linux-x64
+```
+
+If you downloaded a GitHub release artifact instead:
+
+```bash
+tar -xzf CS2AdminTool-linux-x64.tar.gz
+cd <extracted-folder>
+chmod +x CS2AdminTool
+./CS2AdminTool
+```
+
+### Linux dotnet error troubleshooting
+
+If you see an error like `dotnet: command not found`, you're likely trying to run source mode without the SDK installed.
+
+- Preferred: use the **self-contained** release artifact and run `./CS2AdminTool` (no dotnet install needed).
+- Alternative: install .NET 8 SDK/runtime and run with `dotnet run`.
 
 ## GitHub Release Automation
 

@@ -23,3 +23,4 @@ for rid in "${RIDS[@]}"; do
 done
 
 echo "Release artifacts are ready in $DIST_DIR"
+echo "Run locally on Linux: ./launch-linux.sh linux-x64"

@@ -456,7 +456,7 @@ public class MainViewModel : ObservableObject
             ApplyCollection(Categories, _store.Categories.OrderBy(c => c.Name));
             ApplyCollection(Maps, _store.Maps.OrderBy(m => m.DisplayName));
             ApplyCollection(Configs, _store.ServerConfigs.OrderBy(c => c.Name));
-            OnPropertyChanged(nameof(MapsView));
+            NotifyMapBindingsChanged();
             OnPropertyChanged(nameof(ConfigsView));
 
             CommandDelayMs = _store.RunnerOptions.CommandDelayMs;
@@ -820,7 +820,7 @@ public class MainViewModel : ObservableObject
 
         Maps.Add(map);
         SelectedMap = map;
-        OnPropertyChanged(nameof(MapOptions));
+        NotifyMapBindingsChanged();
         await PersistAsync();
     }
 
@@ -838,6 +838,7 @@ public class MainViewModel : ObservableObject
             return;
         }
 
+        NotifyMapBindingsChanged();
         await PersistAsync();
     }
 
@@ -855,7 +856,7 @@ public class MainViewModel : ObservableObject
 
         Maps.Remove(SelectedMap);
         SelectedMap = Maps.FirstOrDefault();
-        OnPropertyChanged(nameof(MapOptions));
+        NotifyMapBindingsChanged();
         await PersistAsync();
     }
 
@@ -869,7 +870,7 @@ public class MainViewModel : ObservableObject
         var duplicated = _mapLibraryService.Duplicate(SelectedMap);
         Maps.Add(duplicated);
         SelectedMap = duplicated;
-        OnPropertyChanged(nameof(MapOptions));
+        NotifyMapBindingsChanged();
         await PersistAsync();
     }
 
@@ -892,6 +893,8 @@ public class MainViewModel : ObservableObject
         ApplyCollection(Categories, _store.Categories);
         ApplyCollection(Maps, _store.Maps);
         ApplyCollection(Configs, _store.ServerConfigs);
+        NotifyMapBindingsChanged();
+        OnPropertyChanged(nameof(ConfigsView));
         await PersistAsync();
     }
 
@@ -1486,6 +1489,13 @@ public class MainViewModel : ObservableObject
         }
 
         Dispatcher.UIThread.Post(() => LiveFeedLines.Add(line));
+    }
+
+    private void NotifyMapBindingsChanged()
+    {
+        OnPropertyChanged(nameof(MapsView));
+        OnPropertyChanged(nameof(MapOptions));
+        OnPropertyChanged(nameof(SelectedConfigMap));
     }
 
     private void RefreshCommandState()

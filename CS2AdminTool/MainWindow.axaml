@@ -211,9 +211,9 @@
                         </StackPanel>
                     </Grid>
 
-                    <GroupBox Grid.Row="3" Header="Live Feed" Margin="0,10,0,0">
+                    <Expander IsExpanded="True" Grid.Row="3" Header="Live Feed" Margin="0,10,0,0">
                         <ListBox ItemsSource="{Binding LiveFeedLines}" ScrollViewer.VerticalScrollBarVisibility="Auto"/>
-                    </GroupBox>
+                    </Expander>
                 </Grid>
             </TabItem>
 
@@ -253,7 +253,7 @@
                             <RowDefinition Height="*"/>
                         </Grid.RowDefinitions>
 
-                        <GroupBox Header="Preset Command Packs" Grid.Row="0" Margin="0,0,0,10">
+                        <Expander IsExpanded="True" Header="Preset Command Packs" Grid.Row="0" Margin="0,0,0,10">
                             <StackPanel Margin="8">
                                 <ComboBox ItemsSource="{Binding PresetPacks}" SelectedItem="{Binding SelectedPresetPack}" />
                                 <WrapPanel Margin="0,8,0,0">
@@ -262,9 +262,9 @@
                                     <Button Width="210" Margin="6,0,0,0" Content="Clear Current In-Game Overrides" Command="{Binding ClearServerOverridesCommand}"/>
                                 </WrapPanel>
                             </StackPanel>
-                        </GroupBox>
+                        </Expander>
 
-                        <GroupBox Header="Player Management Panel" Grid.Row="1" Margin="0,0,0,10">
+                        <Expander IsExpanded="True" Header="Player Management Panel" Grid.Row="1" Margin="0,0,0,10">
                             <StackPanel Margin="8">
                                 <WrapPanel>
                                     <Button Width="120" Content="Refresh Players" Command="{Binding RefreshPlayersCommand}"/>
@@ -290,9 +290,9 @@
                                     <Button Width="90" Margin="6,0,0,0" Content="Swap Team" Command="{Binding SwapPlayerTeamCommand}"/>
                                 </WrapPanel>
                             </StackPanel>
-                        </GroupBox>
+                        </Expander>
 
-                        <GroupBox Header="Scheduled Automation" Grid.Row="2" Margin="0,0,0,10">
+                        <Expander IsExpanded="True" Header="Scheduled Automation" Grid.Row="2" Margin="0,0,0,10">
                             <StackPanel Margin="8">
                                 <WrapPanel>
                                     <TextBlock VerticalAlignment="Center" Text="Every (minutes):"/>
@@ -302,9 +302,9 @@
                                     <Button Width="130" Margin="8,0,0,0" Content="Start / Stop" Command="{Binding ToggleAutomationCommand}"/>
                                 </WrapPanel>
                             </StackPanel>
-                        </GroupBox>
+                        </Expander>
 
-                        <GroupBox Header="Command Safety Guardrails" Grid.Row="3" Margin="0,0,0,10">
+                        <Expander IsExpanded="True" Header="Command Safety Guardrails" Grid.Row="3" Margin="0,0,0,10">
                             <StackPanel Margin="8">
                                 <CheckBox Content="Dry-run mode (no commands sent)" IsChecked="{Binding DryRunMode}"/>
                                 <CheckBox Margin="0,4,0,0" Content="Confirm destructive commands" IsChecked="{Binding RequireDestructiveConfirm}"/>
@@ -313,22 +313,22 @@
                                 <TextBlock Margin="0,8,0,0" Text="Allowlist (optional, comma separated)"/>
                                 <TextBox Text="{Binding CommandAllowlist}"/>
                             </StackPanel>
-                        </GroupBox>
+                        </Expander>
 
-                        <GroupBox Header="Match Workflow Mode" Grid.Row="4" Margin="0,0,0,10">
+                        <Expander IsExpanded="True" Header="Match Workflow Mode" Grid.Row="4" Margin="0,0,0,10">
                             <WrapPanel Margin="8">
                                 <Button Width="170" Content="Pre-match Checklist" Command="{Binding RunPreMatchChecklistCommand}"/>
                                 <Button Width="170" Margin="6,0,0,0" Content="Halftime Switch" Command="{Binding RunHalftimeSwitchCommand}"/>
                                 <Button Width="180" Margin="6,0,0,0" Content="Post-match Archive" Command="{Binding RunPostMatchArchiveCommand}"/>
                             </WrapPanel>
-                        </GroupBox>
+                        </Expander>
 
-                        <GroupBox Header="Audit Log Export" Grid.Row="5">
+                        <Expander IsExpanded="True" Header="Audit Log Export" Grid.Row="5">
                             <StackPanel Margin="8">
                                 <TextBox Text="{Binding AuditExportPath}"/>
                                 <Button Width="150" Margin="0,8,0,0" Content="Export Audit Log" Command="{Binding ExportAuditLogCommand}"/>
                             </StackPanel>
-                        </GroupBox>
+                        </Expander>
                     </Grid>
                 </ScrollViewer>
             </TabItem>
@@ -336,40 +336,40 @@
             <TabItem Header="About / Info">
                 <ScrollViewer ScrollViewer.VerticalScrollBarVisibility="Auto">
                     <StackPanel Margin="12">
-                        <GroupBox Header="Application Information" Margin="0,0,0,10">
+                        <Expander IsExpanded="True" Header="Application Information" Margin="0,0,0,10">
                             <StackPanel Margin="8">
                                 <TextBlock FontWeight="SemiBold" Text="CS2 Control Panel"/>
                                 <TextBlock Margin="0,6,0,0" TextWrapping="Wrap"
                                            Text="Desktop administration utility for CS2 servers with RCON controls, telemetry monitoring, config libraries, and operational tooling."/>
                             </StackPanel>
-                        </GroupBox>
+                        </Expander>
 
-                        <GroupBox Header="Bug Reporting (Planned)" Margin="0,0,0,10">
+                        <Expander IsExpanded="True" Header="Bug Reporting (Planned)" Margin="0,0,0,10">
                             <StackPanel Margin="8">
                                 <TextBlock TextWrapping="Wrap"
                                            Text="A dedicated in-app bug report form is planned for a future release."/>
                                 <TextBlock Margin="0,6,0,0" TextWrapping="Wrap"
                                            Text="Current placeholder: https://github.com/your-org/CS2-ControlPanel/issues"/>
                             </StackPanel>
-                        </GroupBox>
+                        </Expander>
 
-                        <GroupBox Header="Donations (Planned)" Margin="0,0,0,10">
+                        <Expander IsExpanded="True" Header="Donations (Planned)" Margin="0,0,0,10">
                             <StackPanel Margin="8">
                                 <TextBlock TextWrapping="Wrap"
                                            Text="Donation and sponsorship options may be added later. This section is intentionally a placeholder right now."/>
                             </StackPanel>
-                        </GroupBox>
+                        </Expander>
 
-                        <GroupBox Header="Open Source Notice" Margin="0,0,0,10">
+                        <Expander IsExpanded="True" Header="Open Source Notice" Margin="0,0,0,10">
                             <StackPanel Margin="8">
                                 <TextBlock TextWrapping="Wrap"
                                            Text="This project uses open-source dependencies. Ensure license obligations are met when distributing binaries or source modifications."/>
                                 <TextBlock Margin="0,6,0,0" TextWrapping="Wrap"
                                            Text="Include third-party notices and attribution files in releases where required."/>
                             </StackPanel>
-                        </GroupBox>
+                        </Expander>
 
-                        <GroupBox Header="Usage Terms (AU-focused placeholder)">
+                        <Expander IsExpanded="True" Header="Usage Terms (AU-focused placeholder)">
                             <StackPanel Margin="8">
                                 <TextBlock TextWrapping="Wrap"
                                            Text="This tool should be used only by authorized server operators and in compliance with local law and platform terms."/>
@@ -378,7 +378,7 @@
                                 <TextBlock Margin="0,6,0,0" TextWrapping="Wrap"
                                            Text="This is a product placeholder and not legal advice."/>
                             </StackPanel>
-                        </GroupBox>
+                        </Expander>
                     </StackPanel>
                 </ScrollViewer>
             </TabItem>

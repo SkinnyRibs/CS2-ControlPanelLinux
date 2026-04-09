@@ -1,11 +1,9 @@
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.IO;
 using System.Text.Json;
 using System.Text.RegularExpressions;
-using System.Windows;
-using System.Windows.Data;
 using System.Windows.Input;
+using Avalonia.Threading;
 using CS2AdminTool.Infrastructure;
 using CS2AdminTool.Models;
 using CS2AdminTool.Services;
@@ -75,11 +73,6 @@ public class MainViewModel : ObservableObject
         ParsedPlayers = new ObservableCollection<PlayerSnapshot>();
         AuditLogEntries = new ObservableCollection<AuditLogEntry>();
 
-        ConfigsView = CollectionViewSource.GetDefaultView(Configs);
-        ConfigsView.Filter = FilterConfig;
-        MapsView = CollectionViewSource.GetDefaultView(Maps);
-        MapsView.Filter = FilterMap;
-
         ToggleConnectionCommand = new AsyncRelayCommand(ToggleConnectionAsync);
         ExecuteCommand = new AsyncRelayCommand(ExecuteManualCommandAsync, () => _rconService.IsConnected);
         RefreshTelemetryCommand = new AsyncRelayCommand(RefreshTelemetryAsync, () => _rconService.IsConnected);
@@ -139,8 +132,8 @@ public class MainViewModel : ObservableObject
     public ObservableCollection<PlayerSnapshot> ParsedPlayers { get; }
     public ObservableCollection<AuditLogEntry> AuditLogEntries { get; }
 
-    public ICollectionView ConfigsView { get; }
-    public ICollectionView MapsView { get; }
+    public IEnumerable<ServerConfigProfile> ConfigsView => Configs.Where(FilterConfig).ToList();
+    public IEnumerable<MapProfile> MapsView => Maps.Where(FilterMap).ToList();
 
     public string Host { get => _host; set => SetProperty(ref _host, value); }
     public string Port { get => _port; set => SetProperty(ref _port, value); }
@@ -155,7 +148,7 @@ public class MainViewModel : ObservableObject
         {
             if (SetProperty(ref _configSearchText, value))
             {
-                ConfigsView.Refresh();
+                OnPropertyChanged(nameof(ConfigsView));
             }
         }
     }
@@ -167,7 +160,7 @@ public class MainViewModel : ObservableObject
         {
             if (SetProperty(ref _mapSearchText, value))
             {
-                MapsView.Refresh();
+                OnPropertyChanged(nameof(MapsView));
             }
         }
     }
@@ -218,7 +211,7 @@ public class MainViewModel : ObservableObject
         {
             if (SetProperty(ref _selectedCategory, value))
             {
-                ConfigsView.Refresh();
+                OnPropertyChanged(nameof(ConfigsView));
                 RefreshCommandState();
             }
         }
@@ -234,6 +227,7 @@ public class MainViewModel : ObservableObject
                 OnPropertyChanged(nameof(SelectedConfigCommandsText));
                 OnPropertyChanged(nameof(SelectedConfigTagsText));
                 OnPropertyChanged(nameof(SelectedMapTagsText));
+                OnPropertyChanged(nameof(SelectedConfigMap));
                 RefreshCommandState();
             }
         }
@@ -247,6 +241,7 @@ public class MainViewModel : ObservableObject
             if (SetProperty(ref _selectedMap, value))
             {
                 OnPropertyChanged(nameof(SelectedMapTagsText));
+                OnPropertyChanged(nameof(SelectedConfigMap));
                 RefreshCommandState();
             }
         }
@@ -345,6 +340,30 @@ public class MainViewModel : ObservableObject
         }
     }
 
+
+    public MapProfile? SelectedConfigMap
+    {
+        get
+        {
+            if (SelectedConfig is null || SelectedConfig.MapProfileId is null)
+            {
+                return null;
+            }
+
+            return Maps.FirstOrDefault(m => m.Id == SelectedConfig.MapProfileId);
+        }
+        set
+        {
+            if (SelectedConfig is null)
+            {
+                return;
+            }
+
+            SelectedConfig.MapProfileId = value?.Id;
+            OnPropertyChanged();
+        }
+    }
+
     public string SelectedConfigTagsText
     {
         get => SelectedConfig is null ? string.Empty : string.Join(", ", SelectedConfig.Tags);
@@ -437,6 +456,8 @@ public class MainViewModel : ObservableObject
             ApplyCollection(Categories, _store.Categories.OrderBy(c => c.Name));
             ApplyCollection(Maps, _store.Maps.OrderBy(m => m.DisplayName));
             ApplyCollection(Configs, _store.ServerConfigs.OrderBy(c => c.Name));
+            NotifyMapBindingsChanged();
+            OnPropertyChanged(nameof(ConfigsView));
 
             CommandDelayMs = _store.RunnerOptions.CommandDelayMs;
             ContinueOnFailure = _store.RunnerOptions.ContinueOnCommandFailure;
@@ -636,7 +657,7 @@ public class MainViewModel : ObservableObject
 
         Configs.Add(config);
         SelectedConfig = config;
-        ConfigsView.Refresh();
+        OnPropertyChanged(nameof(ConfigsView));
         await PersistAsync();
     }
 
@@ -669,7 +690,7 @@ public class MainViewModel : ObservableObject
 
         Configs.Remove(SelectedConfig);
         SelectedConfig = Configs.FirstOrDefault();
-        ConfigsView.Refresh();
+        OnPropertyChanged(nameof(ConfigsView));
         await PersistAsync();
     }
 
@@ -697,7 +718,7 @@ public class MainViewModel : ObservableObject
 
         Configs.Add(duplicate);
         SelectedConfig = duplicate;
-        ConfigsView.Refresh();
+        OnPropertyChanged(nameof(ConfigsView));
         await PersistAsync();
     }
 
@@ -799,7 +820,7 @@ public class MainViewModel : ObservableObject
 
         Maps.Add(map);
         SelectedMap = map;
-        OnPropertyChanged(nameof(MapOptions));
+        NotifyMapBindingsChanged();
         await PersistAsync();
     }
 
@@ -817,6 +838,7 @@ public class MainViewModel : ObservableObject
             return;
         }
 
+        NotifyMapBindingsChanged();
         await PersistAsync();
     }
 
@@ -834,7 +856,7 @@ public class MainViewModel : ObservableObject
 
         Maps.Remove(SelectedMap);
         SelectedMap = Maps.FirstOrDefault();
-        OnPropertyChanged(nameof(MapOptions));
+        NotifyMapBindingsChanged();
         await PersistAsync();
     }
 
@@ -848,7 +870,7 @@ public class MainViewModel : ObservableObject
         var duplicated = _mapLibraryService.Duplicate(SelectedMap);
         Maps.Add(duplicated);
         SelectedMap = duplicated;
-        OnPropertyChanged(nameof(MapOptions));
+        NotifyMapBindingsChanged();
         await PersistAsync();
     }
 
@@ -871,6 +893,8 @@ public class MainViewModel : ObservableObject
         ApplyCollection(Categories, _store.Categories);
         ApplyCollection(Maps, _store.Maps);
         ApplyCollection(Configs, _store.ServerConfigs);
+        NotifyMapBindingsChanged();
+        OnPropertyChanged(nameof(ConfigsView));
         await PersistAsync();
     }
 
@@ -973,7 +997,7 @@ public class MainViewModel : ObservableObject
         config.UpdatedAt = DateTime.UtcNow;
         Configs.Add(config);
         SelectedConfig = config;
-        ConfigsView.Refresh();
+        OnPropertyChanged(nameof(ConfigsView));
         await PersistAsync();
     }
 
@@ -1220,8 +1244,8 @@ public class MainViewModel : ObservableObject
 
         if (RequireDestructiveConfirm && (normalized.Contains("kick", StringComparison.OrdinalIgnoreCase) || normalized.Contains("ban", StringComparison.OrdinalIgnoreCase)))
         {
-            var confirmed = MessageBox.Show($"Confirm destructive command?\n{normalized}", "Confirm command", MessageBoxButton.YesNo, MessageBoxImage.Warning);
-            return confirmed == MessageBoxResult.Yes;
+            AddLog($"[Guardrail] Destructive command requires confirmation (disabled in this desktop build): {normalized}");
+            return false;
         }
 
         return true;
@@ -1260,13 +1284,8 @@ public class MainViewModel : ObservableObject
         ];
     }
 
-    private bool FilterConfig(object obj)
+    private bool FilterConfig(ServerConfigProfile config)
     {
-        if (obj is not ServerConfigProfile config)
-        {
-            return false;
-        }
-
         var byCategory = SelectedCategory is null || config.Category.Equals(SelectedCategory.Name, StringComparison.OrdinalIgnoreCase);
         var q = ConfigSearchText.Trim();
         var bySearch = string.IsNullOrWhiteSpace(q)
@@ -1277,13 +1296,8 @@ public class MainViewModel : ObservableObject
         return byCategory && bySearch;
     }
 
-    private bool FilterMap(object obj)
+    private bool FilterMap(MapProfile map)
     {
-        if (obj is not MapProfile map)
-        {
-            return false;
-        }
-
         var q = MapSearchText.Trim();
         return string.IsNullOrWhiteSpace(q)
                || map.DisplayName.Contains(q, StringComparison.OrdinalIgnoreCase)
@@ -1468,13 +1482,20 @@ public class MainViewModel : ObservableObject
 
     private void AddLiveFeed(string line)
     {
-        if (Application.Current.Dispatcher.CheckAccess())
+        if (Dispatcher.UIThread.CheckAccess())
         {
             LiveFeedLines.Add(line);
             return;
         }
 
-        Application.Current.Dispatcher.Invoke(() => LiveFeedLines.Add(line));
+        Dispatcher.UIThread.Post(() => LiveFeedLines.Add(line));
+    }
+
+    private void NotifyMapBindingsChanged()
+    {
+        OnPropertyChanged(nameof(MapsView));
+        OnPropertyChanged(nameof(MapOptions));
+        OnPropertyChanged(nameof(SelectedConfigMap));
     }
 
     private void RefreshCommandState()
@@ -1513,14 +1534,14 @@ public class MainViewModel : ObservableObject
     private void AddLog(string line)
     {
         var message = $"[{DateTime.Now:HH:mm:ss}] {line}";
-        if (Application.Current.Dispatcher.CheckAccess())
+        if (Dispatcher.UIThread.CheckAccess())
         {
             LogLines.Add(message);
             LiveFeedLines.Add(message);
             return;
         }
 
-        Application.Current.Dispatcher.Invoke(() =>
+        Dispatcher.UIThread.Post(() =>
         {
             LogLines.Add(message);
             LiveFeedLines.Add(message);
